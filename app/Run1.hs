@@ -7,5 +7,5 @@ input = ["5ffour295","m9qvkqlgfhtwo3seven4seven","2vdqng1sixzjlkjvq","5twonineei
 main :: IO ()
 main = do
   print $ day1a input
---  print $ day1b input
+  print $ day1b input
 

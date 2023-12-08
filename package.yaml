@@ -24,6 +24,7 @@ dependencies:
 - mtl
 - regex-base
 - regex-posix
+- text
 
 library:
   source-dirs: src
