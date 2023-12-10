@@ -8,6 +8,7 @@ import Util
 import qualified Grid
 import Day1
 import Day2
+import Day3
 
 main :: IO ()
 main = hspec $ do
@@ -66,3 +67,13 @@ main = hspec $ do
       gamePower (parseGame (head example)) `shouldBe` 48
     it "day2b" $ do
       day2b example `shouldBe` 2286
+      
+  describe "day 3" $ do
+    let example = ["467..114..","...*......","..35..633.","......#...","617*......",".....+.58.","..592.....","......755.","...$.*....",".664.598.."]
+    it "parse" $ do
+      parse example `shouldBe` [Number (0,0) (2,0) 467, Number (5,0) (7,0) 114, Symbol (3,1) '*', Number (2,2) (3,2) 35, Number (6,2) (8,2) 633, Symbol (6,3) '#', Number (0,4) (2,4) 617, Symbol (3,4) '*', Symbol (5,5) '+', Number (7,5) (8,5) 58, Number (2,6) (4,6) 592, Number (6,7) (8,7) 755, Symbol (3,8) '$', Symbol (5,8) '*', Number (1,9) (3,9) 664, Number (5,9) (7,9) 598]
+      parse ["...123"] `shouldBe` [Number (3,0) (5,0) 123]
+    it "day3a" $ do
+      day3a example `shouldBe` 4361
+      
+      

@@ -66,5 +66,6 @@ readInts s = map stringToInt intStrs
 
 readDigits :: String -> [Int]
 readDigits = map charToInt . filter isDigit
-  where
-    isDigit c = c >= '0' && c <= '9'
+    
+isDigit :: Char -> Bool
+isDigit c = c >= '0' && c <= '9'
