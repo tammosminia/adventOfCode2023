@@ -27,13 +27,29 @@ parseLine (h:t) (x, y)
           (lx, ly) = left
 
 isNumber :: Parsed -> Bool
-isNumber (Number {}) = True
+isNumber Number {} = True
 isNumber _ = False
+
+isGear :: Parsed -> Bool
+isGear Symbol { symbol = '*'} = True
+isGear _ = False
     
 day3a :: [String] -> Int
 day3a input = sum $ map number $ filter isNextToSymbol numbers
   where
     (numbers, symbols) = partition isNumber $ parse input
     isNextToSymbol number = any (adjacent number) symbols
-    adjacent (Number (lx, ly) (rx, ry) _) (Symbol (x, y) _) = lx - 1 <= x && x <= rx + 1 && ly - 1 <= y && y <= ry + 1
     
+adjacent :: Parsed -> Parsed -> Bool
+adjacent (Number (lx, ly) (rx, ry) _) (Symbol (x, y) _) = lx - 1 <= x && x <= rx + 1 && ly - 1 <= y && y <= ry + 1
+    
+day3b :: [String] -> Int
+day3b input = sum $ map gearRatio $ filter isGear symbols
+  where 
+    (numbers, symbols) = partition isNumber $ parse input
+    gearRatio s = if length values == 2 then product values else 0
+      where
+        Symbol (x, y) '*' = s
+        adjacentNumbers = filter (\n -> adjacent n s) numbers
+        values = map number adjacentNumbers
+  

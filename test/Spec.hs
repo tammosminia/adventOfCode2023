@@ -75,5 +75,7 @@ main = hspec $ do
       parse ["...123"] `shouldBe` [Number (3,0) (5,0) 123]
     it "day3a" $ do
       day3a example `shouldBe` 4361
+    it "day3b" $ do
+      day3b example `shouldBe` 467835
       
       

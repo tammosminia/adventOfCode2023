@@ -6,4 +6,5 @@ input = ["................................................965..583........389...
 main :: IO ()
 main = do
   print $ day3a input
+  print $ day3b input
 
