@@ -2,6 +2,7 @@ module Day5 where
 
 import Util
 import Grid
+--import Data.Foldable
 import Data.List
 import Data.List.Split
 import Debug.Trace
@@ -9,55 +10,53 @@ import Debug.Trace
 type ItemName = String
 type ItemNumber = Int
 data GardenMap = GardenMap { destinationRangeStart :: ItemNumber, sourceRangeStart :: ItemNumber, rangeLength :: Int } deriving (Show, Eq)
-data GardenConversion = GardenConversion { inputName :: ItemName, outputName :: ItemName, maps :: [GardenMap] } deriving (Show, Eq)
-data Garden = Garden { seeds :: [ItemNumber], conversions :: [GardenConversion] } deriving (Show, Eq)
-data Item = Item { name :: ItemName, number :: ItemNumber } deriving (Show, Eq)
-type ParseSeeds = String -> [ItemNumber]
+data GardenConversion = GardenConversion { maps :: [GardenMap] } deriving (Show, Eq)
+data Garden = Garden { conversions :: [GardenConversion] } deriving (Show, Eq)
+--type SeedIterator = Foldable t => [Int] -> t Int
 
 parseGardenMap :: String -> GardenMap
 parseGardenMap line = GardenMap d s r
   where
     [d, s, r] = readInts line
 
-parseInput :: ParseSeeds -> [String] -> Garden
-parseInput parseSeeds lines = Garden seeds conversions
+parseInput :: [String] -> (Garden, [Int])
+parseInput lines = (Garden conversions, seeds)
   where
     [seedLine] : conversionBlocks = splitOn [""] lines
-    seeds = parseSeeds seedLine
+    seeds = readInts seedLine
     conversions = map parseConversion conversionBlocks
-    parseConversion (firstLine : mapLines) = GardenConversion input output maps
+    parseConversion lines = GardenConversion maps
       where
-        [input, output] = splitOn "-to-" $ reverse $ drop 5 $ reverse firstLine
-        maps = map parseGardenMap mapLines
+        maps = map parseGardenMap $ tail lines
 
-convertOnce :: Garden -> Item -> Item
-convertOnce (Garden _ conversions) (Item name inputNumber) = Item (outputName conversion) outputNumber
+convertOnce :: GardenConversion -> ItemNumber -> ItemNumber
+convertOnce conversion inputNumber = outputNumber
   where
-    Just conversion = find (\c -> inputName c == name) conversions
-    correctMap = find (\(GardenMap dest source range) -> source <= inputNumber && inputNumber < (source + range)) $ maps conversion
+    correctMap = find (\(GardenMap _ source range) -> source <= inputNumber && inputNumber < (source + range)) $ maps conversion
     outputNumber = case correctMap of
       Just (GardenMap dest source _) -> inputNumber - source + dest
       Nothing -> inputNumber
 
-convertToLocation :: Garden -> Item -> ItemNumber
-convertToLocation _ (Item "location" n) = n
-convertToLocation garden item = convertToLocation garden $ convertOnce garden item
+convertToLocation :: Garden -> Int -> ItemNumber -> ItemNumber
+convertToLocation _ 6 n = n
+convertToLocation garden conversionNr item = convertToLocation garden (conversionNr + 1) $ convertOnce (conversions garden !! conversionNr) item
 
-day5a :: [String] -> Int
-day5a input = minimum $ map (convertToLocation garden) seeds
+day5 :: Foldable t => ([Int] -> t Int) -> [String] -> Int
+day5 seedIterator input = foldl foldFunction (convert (head seedInput)) seeds
   where
-    parseSeeds = readInts
-    garden = parseInput parseSeeds input
-    Garden seedNumbers conversions = garden
-    seeds = map (Item "seed") seedNumbers
+    (garden, seedInput) = parseInput input
+    Garden conversions = garden
+    seeds = seedIterator seedInput
+    convert = convertToLocation garden 0
+    foldFunction mem one = minimum [mem, convert one]
     
+day5a :: [String] -> Int
+day5a = day5 id
+  
 day5b :: [String] -> Int
-day5b input = minimum $ map (convertToLocation garden) seeds
+day5b = day5 seedIterator
   where
-    parseSeeds line = concatMap expand $ chunksOf 2 $ readInts line
+    seedIterator ints = concatMap expand $ chunksOf 2 ints
       where
         expand [nr, 1] = [nr]
         expand [nr, range] = nr : expand [nr + 1, range - 1]
-    garden = parseInput parseSeeds input
-    Garden seedNumbers conversions = garden
-    seeds = map (Item "seed") seedNumbers
