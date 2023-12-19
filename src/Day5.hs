@@ -2,7 +2,6 @@ module Day5 where
 
 import Util
 import Grid
---import Data.Foldable
 import Data.List
 import Data.List.Split
 import Debug.Trace
@@ -12,7 +11,6 @@ type ItemNumber = Int
 data GardenMap = GardenMap { destinationRangeStart :: ItemNumber, sourceRangeStart :: ItemNumber, rangeLength :: Int } deriving (Show, Eq)
 data GardenConversion = GardenConversion { maps :: [GardenMap] } deriving (Show, Eq)
 data Garden = Garden { conversions :: [GardenConversion] } deriving (Show, Eq)
---type SeedIterator = Foldable t => [Int] -> t Int
 
 parseGardenMap :: String -> GardenMap
 parseGardenMap line = GardenMap d s r
