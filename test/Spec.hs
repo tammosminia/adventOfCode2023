@@ -11,6 +11,7 @@ import Day2
 import Day3
 import Day4
 import Day5
+import Day6
 
 main :: IO ()
 main = hspec $ do
@@ -94,5 +95,11 @@ main = hspec $ do
     it "day5b" $ do
       day5b example `shouldBe` 46
       
+  describe "day 6" $ do
+    let example = ["Time:      7  15   30","Distance:  9  40  200"]
+    it "day6a" $ do
+      day6a example `shouldBe` 288
+    it "day6b" $ do
+      day6b example `shouldBe` 71503
       
       
