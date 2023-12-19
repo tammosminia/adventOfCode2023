@@ -10,6 +10,7 @@ import Day1
 import Day2
 import Day3
 import Day4
+import Day5
 
 main :: IO ()
 main = hspec $ do
@@ -85,5 +86,13 @@ main = hspec $ do
       day4a example `shouldBe` 13
     it "day4b" $ do
       day4b example `shouldBe` 30
+      
+  describe "day 5" $ do
+    let example = ["seeds: 79 14 55 13","","seed-to-soil map:","50 98 2","52 50 48","","soil-to-fertilizer map:","0 15 37","37 52 2","39 0 15","","fertilizer-to-water map:","49 53 8","0 11 42","42 0 7","57 7 4","","water-to-light map:","88 18 7","18 25 70","","light-to-temperature map:","45 77 23","81 45 19","68 64 13","","temperature-to-humidity map:","0 69 1","1 0 69","","humidity-to-location map:","60 56 37","56 93 4"]
+    it "day5a" $ do
+      day5a example `shouldBe` 35
+    it "day5b" $ do
+      day5b example `shouldBe` 46
+      
       
       
