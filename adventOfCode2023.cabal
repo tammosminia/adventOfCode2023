@@ -19,7 +19,9 @@ library
       Day4
       Day5
       Day6
+      Day7
       Grid
+      Safelog
       Util
   other-modules:
       Paths_adventOfCode2023
